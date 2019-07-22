@@ -38,11 +38,51 @@ But please DO REMEMBER procedures of SIFT and HoG. For those who're interested i
 #    Follow up 1: Can it be completed in a shorter time complexity?
 #
 #    Python version:
-#    def medianBlur(img, kernel, padding_way):
+'''
+import  numpy as np
+import cv2
+
+path=r'D:\groceries\AI\ai-for-CNN\img\dragon-mother.jpg'
+img=cv2.imread(path)
+
 #        img & kernel is List of List; padding_way a string
 #        Please finish your code under this blank
-#
-#
+def medianBlur(img, kernel, padding_way):
+
+    def median(array):
+        arr=array.flatten()
+        arr_sort=np.sort(arr)
+        return arr_sort[(kernel[0]*kernel[1]-1)/2]
+
+    channel=len(img.shape)
+    img_channel=0
+    if channel==3:
+        print( 'image has 3 channels')
+        img_channel=3
+    if channel==2:
+        print('image has 1 channel')
+        img_channel=1
+    w,h=img.shape[0],img.shape[1]
+
+    m,n=kernel[0],kernel[1]
+    img_medianblur=np.empty(img.shape,dtype=np.uint8)
+    layer=img[:,:,1]
+    layer=np.vstack(np.zeros(((m-1)/2,h)),layer,np.zeros(((m-1)/2,h)))
+    layer=np.hstack(np.zeros((layer.shape[0],(n-1)/2)),layer,np.zeros((layer.shape[0],(n-1)/2)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 //   C++ version:
 //   void medianBlur(vector<vector<int>>& img, vector<vector<int>> kernel, string padding_way){
 //       Please finish your code within this blank  
