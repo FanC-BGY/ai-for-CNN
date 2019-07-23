@@ -49,28 +49,64 @@ img=cv2.imread(path)
 #        Please finish your code under this blank
 def medianBlur(img, kernel, padding_way):
 
-    def median(array):
+    def median(array):  # get the middle number
         arr=array.flatten()
         arr_sort=np.sort(arr)
-        return arr_sort[(kernel[0]*kernel[1]-1)/2]
+        return arr_sort[int((kernel[0]*kernel[1]-1)/2)]
+
 
     channel=len(img.shape)
-    img_channel=0
+
     if channel==3:
         print( 'image has 3 channels')
-        img_channel=3
     if channel==2:
         print('image has 1 channel')
-        img_channel=1
+        img=img.reshape((img.shape[0],img.shape[1],1))
+
     w,h=img.shape[0],img.shape[1]
 
     m,n=kernel[0],kernel[1]
     img_medianblur=np.empty(img.shape,dtype=np.uint8)
-    layer=img[:,:,1]
-    layer=np.vstack(np.zeros(((m-1)/2,h)),layer,np.zeros(((m-1)/2,h)))
-    layer=np.hstack(np.zeros((layer.shape[0],(n-1)/2)),layer,np.zeros((layer.shape[0],(n-1)/2)))
 
 
+    for ly in range(img.shape[2]):
+
+        layer=img[:,:,ly]
+
+
+        if padding_way=='zero':
+            # padding with zeros
+            print('padding way is zeros')
+            layer=np.vstack((np.zeros((int((m-1)/2),h)),layer,np.zeros((int((m-1)/2),h))))
+            layer=np.hstack((np.zeros((layer.shape[0],int((n-1)/2))),layer,np.zeros((layer.shape[0],int((n-1)/2)))))
+
+        else:
+            print('padding way is repeat')
+
+            # padding with repeat
+            for i in range(int((m+1)/2)):
+                layer = np.vstack((layer[0,:].reshape(1,-1), layer, layer[-1,:].reshape(1,-1)))
+
+
+            for i in range(int((n+1)/2)):
+
+                layer = np.hstack((layer[:,0].reshape(-1,1),layer,layer[:,-1].reshape(-1,1)))
+
+        for i in range(w):
+            for j in range(h):
+                # print(layer[i:i+kernel[0]-1,j:j+kernel[1]-1])
+                img_medianblur[i,j,ly]=median(layer[i:i+kernel[0],j:j+kernel[1]])
+
+
+    cv2.imshow('blur',img_medianblur)
+    cv2.imshow('origin',img)
+
+    if cv2.waitKey()==27:
+        cv2.destroyAllWindows()
+
+
+
+medianBlur(img,(7,7),'zero')
 
 
 
