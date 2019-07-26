@@ -2,7 +2,7 @@
 
 - 高斯中值模糊
   - code
-    - GaussianKernel.py
+    - assignment2.py
 - RanSaC
   - code
     - ransac.py
